@@ -23,11 +23,15 @@ A simple REST API for managing a to-do list, built with Node.js and Express.
 
 Install the dependencies:
 
+```bash
 npm install
+```
 
 Start the server:
 
+```bash
 node server.js
+```
 
 The server will run at:
 
