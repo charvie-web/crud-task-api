@@ -55,20 +55,35 @@ Swagger UI provides an interactive way to view and test all API endpoints using 
 
 Create a new task using curl:
 
+```bash
 curl -i -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d "{\"title\":\"Buy milk\"}"
+```
 
 A successful request returns:
 
+```text
 201 Created
+```
 
 Example response:
 
+```json
 {
   "id": 4,
   "title": "Buy milk",
   "done": false
 }
+```
 
+### Actual curl output
+
+```text
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+
+{"id":4,"title":"Buy milk","done":false}
+```
 ## Status Codes
 
 | Status Code | Meaning |
