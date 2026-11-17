@@ -4,17 +4,14 @@ function getReportData() {
   const db = new DatabaseSync("report.db");
 
   const totals = db.prepare(`
-    SELECT
-      COUNT(*) AS totalOrders,
-      ROUND(SUM(amount), 2) AS totalRevenue
+    SELECT COUNT(*) AS totalOrders,
+           ROUND(SUM(amount), 2) AS totalRevenue
     FROM orders
   `).get();
 
   const topProducts = db.prepare(`
-    SELECT
-      product,
-      COUNT(*) AS totalOrders,
-      ROUND(SUM(amount), 2) AS revenue
+    SELECT product, COUNT(*) AS totalOrders,
+           ROUND(SUM(amount), 2) AS revenue
     FROM orders
     GROUP BY product
     ORDER BY revenue DESC
@@ -22,18 +19,22 @@ function getReportData() {
   `).all();
 
   const ordersPerDay = db.prepare(`
-    SELECT
-      DATE(created_at) AS day,
-      COUNT(*) AS totalOrders
+    SELECT DATE(created_at) AS day, COUNT(*) AS totalOrders
     FROM orders
     WHERE DATE(created_at) >= DATE('now', '-6 days')
     GROUP BY DATE(created_at)
     ORDER BY day ASC
   `).all();
 
+  const allOrders = db.prepare(`
+    SELECT id, customer, product, amount, created_at
+    FROM orders
+    ORDER BY created_at DESC
+  `).all();
+
   db.close();
 
-  return { totals, topProducts, ordersPerDay };
+  return { totals, topProducts, ordersPerDay, allOrders };
 }
 
 module.exports = { getReportData };
