@@ -1,107 +1,140 @@
-# CRUD Task API
+# FlyRank A4 - Authentication API
 
-A simple REST API for managing a to-do list, built with Node.js and Express.
+A REST API built using Node.js, Express, Supabase Authentication and JWT for secure user authentication and protected routes. The project also retains the original SQLite-based Task CRUD API.
 
 ## Features
 
-- Create tasks
-- Read all tasks
-- Read a single task
-- Update tasks
-- Delete tasks
-- Input validation
-- JSON error responses
-- Swagger UI documentation
+- User registration (Signup)
+- User login
+- JWT access and refresh tokens
+- Protected routes using Bearer token authentication
+- Reusable authentication middleware
+- User logout and token revocation
+- Public API endpoint
+- Protected user profile
+- Protected dashboard
+- SQLite Task CRUD operations
+- Interactive Swagger UI documentation
 
 ## Technologies
 
 - Node.js
-- Express
+- Express.js
+- Supabase Authentication
+- JSON Web Tokens (JWT)
+- SQLite
+- better-sqlite3
 - Swagger UI Express
+- dotenv
 
-## How to Run
+## Project Setup
 
-Install the dependencies:
+Clone the repository:
+
+```bash
+git clone https://github.com/charvie-web/crud-task-api.git
+cd crud-task-api
+```
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-Start the server:
+## Environment Variables
 
-```bash
-node server.js
+Create a `.env` file in the project root:
+
+```env
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_publishable_key
+PORT=3000
 ```
 
-The server will run at:
+Replace the placeholder values with your own Supabase Project URL and publishable key.
 
-http://localhost:3000
+Never commit the `.env` file or expose secret API keys.
 
-## Swagger UI
+## Run the Server
 
-Once the server is running, open:
+```bash
+npm start
+```
 
+The server runs on port 3000 by default.
+
+## API Documentation
+
+Open Swagger UI at:
+
+```text
 http://localhost:3000/docs
+```
 
-Swagger UI provides an interactive way to view and test all API endpoints using "Try it out".
+Swagger provides an interactive interface to explore and test the API endpoints.
 
-## API Endpoints
+## Authentication Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | /tasks | Get all tasks |
-| GET | /tasks/:id | Get one task |
-| POST | /tasks | Create a new task |
+| POST | /auth/signup | Register a new user |
+| POST | /auth/login | Authenticate a user and receive tokens |
+| POST | /auth/logout | Log out an authenticated user |
+| GET | /public/info | Access public information |
+| GET | /protected/profile | Retrieve authenticated user profile |
+| GET | /protected/dashboard | Access protected dashboard |
+
+## Task CRUD Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /tasks | Retrieve all tasks |
+| GET | /tasks/:id | Retrieve a task |
+| POST | /tasks | Create a task |
 | PUT | /tasks/:id | Update a task |
 | DELETE | /tasks/:id | Delete a task |
 
-## Example
+## Testing Authentication
 
-Create a new task using curl:
+1. Register a user using POST /auth/signup.
+2. Log in using POST /auth/login.
+3. Copy the access_token from the login response.
+4. Click Authorize in Swagger UI and provide the Bearer token.
+5. Access /protected/profile and /protected/dashboard.
+6. Call POST /auth/logout to revoke the session.
+7. Verify that the revoked token can no longer access protected routes.
 
-```bash
-curl -i -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d "{\"title\":\"Buy milk\"}"
-```
+## Authentication Middleware
 
-A successful request returns:
+The reusable `authenticateToken` middleware:
 
-```text
-201 Created
-```
+- Reads the Bearer token from the Authorization header.
+- Verifies the token with Supabase Auth.
+- Attaches the authenticated user to the request.
+- Rejects missing, invalid or expired tokens with HTTP 401.
 
-Example response:
+## Expected HTTP Status Codes
 
-```json
-{
-  "id": 4,
-  "title": "Buy milk",
-  "done": false
-}
-```
-
-### Actual curl output
-
-```text
-HTTP/1.1 201 Created
-X-Powered-By: Express
-Content-Type: application/json; charset=utf-8
-
-{"id":4,"title":"Buy milk","done":false}
-```
-## Status Codes
-
-| Status Code | Meaning |
+| Status | Meaning |
 |---|---|
 | 200 | Successful request |
-| 201 | Task created |
-| 204 | Task deleted |
+| 201 | User or task created |
+| 204 | Logout or deletion successful |
 | 400 | Invalid input |
-| 404 | Task not found |
+| 401 | Missing, invalid or expired token |
+| 404 | Resource not found |
+| 500 | Internal server error |
 
-## Data Storage
+## Security
 
-Tasks are stored in an in-memory JavaScript array. No database is used in this version of the project, so the tasks reset when the server restarts.
+- Environment variables are stored in `.env`.
+- `.env` is excluded through `.gitignore`.
+- Supabase handles user authentication and JWT verification.
+- Protected routes require a valid Bearer token.
 
-## Swagger Screenshot
+## Author
 
-![Swagger UI](swaggerui.png)
+Charvi Jain
+
+GitHub: https://github.com/charvie-web
