@@ -115,7 +115,11 @@ async function generatePdf(outputPath = "reports/test.pdf") {
   }
 }
 
-generatePdf().catch(error => {
-  console.error("PDF generation failed:", error);
-  process.exitCode = 1;
-});
+module.exports = { generatePdf };
+
+if (require.main === module) {
+  generatePdf().catch(error => {
+    console.error("PDF generation failed:", error);
+    process.exitCode = 1;
+  });
+}
