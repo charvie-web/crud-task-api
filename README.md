@@ -138,3 +138,7 @@ The reusable `authenticateToken` middleware:
 Charvi Jain
 
 GitHub: https://github.com/charvie-web
+
+## Swagger UI Screenshot
+
+![Swagger Authentication API](screenshots/swagger-auth.png)
